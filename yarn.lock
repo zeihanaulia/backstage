@@ -1411,117 +1411,7 @@
     uuid "^8.0.0"
     yup "^0.32.9"
 
-"@backstage/cli@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.npmjs.org/@backstage/cli/-/cli-0.14.1.tgz#cc502ef38ac31888cbacfe5abe3bbe05fb35fa04"
-  integrity sha512-CWg3Sl+EIbgZm6cEF/bt8/n4FUFCwGDFhEkKDmxqhla/u4GQCKo+N9Fg8NPRHU4jOQ0cwUlpm0NxMxAGNnE+1Q==
-  dependencies:
-    "@backstage/cli-common" "^0.1.8"
-    "@backstage/config" "^0.1.15"
-    "@backstage/config-loader" "^0.9.6"
-    "@backstage/errors" "^0.2.2"
-    "@backstage/release-manifests" "^0.0.2"
-    "@backstage/types" "^0.1.3"
-    "@hot-loader/react-dom" "^17.0.2"
-    "@manypkg/get-packages" "^1.1.3"
-    "@octokit/request" "^5.4.12"
-    "@rollup/plugin-commonjs" "^21.0.1"
-    "@rollup/plugin-json" "^4.1.0"
-    "@rollup/plugin-node-resolve" "^13.0.0"
-    "@rollup/plugin-yaml" "^3.1.0"
-    "@spotify/eslint-config-base" "^12.0.0"
-    "@spotify/eslint-config-react" "^12.0.0"
-    "@spotify/eslint-config-typescript" "^12.0.0"
-    "@sucrase/jest-plugin" "^2.1.1"
-    "@sucrase/webpack-loader" "^2.0.0"
-    "@svgr/plugin-jsx" "6.2.x"
-    "@svgr/plugin-svgo" "6.2.x"
-    "@svgr/rollup" "6.2.x"
-    "@svgr/webpack" "6.2.x"
-    "@types/webpack-env" "^1.15.2"
-    "@typescript-eslint/eslint-plugin" "^5.9.0"
-    "@typescript-eslint/parser" "^5.9.0"
-    "@yarnpkg/lockfile" "^1.1.0"
-    bfj "^7.0.2"
-    buffer "^6.0.3"
-    chalk "^4.0.0"
-    chokidar "^3.3.1"
-    commander "^6.1.0"
-    css-loader "^6.5.1"
-    diff "^5.0.0"
-    esbuild "^0.14.10"
-    esbuild-loader "^2.18.0"
-    eslint "^8.6.0"
-    eslint-config-prettier "^8.3.0"
-    eslint-formatter-friendly "^7.0.0"
-    eslint-plugin-import "^2.25.4"
-    eslint-plugin-jest "^25.3.4"
-    eslint-plugin-jsx-a11y "^6.5.1"
-    eslint-plugin-monorepo "^0.3.2"
-    eslint-plugin-react "^7.28.0"
-    eslint-plugin-react-hooks "^4.3.0"
-    eslint-webpack-plugin "^2.6.0"
-    express "^4.17.1"
-    fork-ts-checker-webpack-plugin "^7.0.0-alpha.8"
-    fs-extra "9.1.0"
-    glob "^7.1.7"
-    handlebars "^4.7.3"
-    html-webpack-plugin "^5.3.1"
-    inquirer "^8.2.0"
-    jest "^26.0.1"
-    jest-css-modules "^2.1.0"
-    jest-transform-yaml "^1.0.0"
-    json-schema "^0.4.0"
-    lodash "^4.17.21"
-    mini-css-extract-plugin "^2.4.2"
-    minimatch "5.0.0"
-    node-libs-browser "^2.2.1"
-    npm-packlist "^3.0.0"
-    ora "^5.3.0"
-    postcss "^8.1.0"
-    process "^0.11.10"
-    react-dev-utils "^12.0.0-next.60"
-    react-hot-loader "^4.13.0"
-    recursive-readdir "^2.2.2"
-    replace-in-file "^6.0.0"
-    rollup "^2.60.2"
-    rollup-plugin-dts "^4.0.1"
-    rollup-plugin-esbuild "^4.7.2"
-    rollup-plugin-peer-deps-external "^2.2.2"
-    rollup-plugin-postcss "^4.0.0"
-    rollup-pluginutils "^2.8.2"
-    run-script-webpack-plugin "^0.0.11"
-    semver "^7.3.2"
-    style-loader "^3.3.1"
-    sucrase "^3.20.2"
-    tar "^6.1.2"
-    terser-webpack-plugin "^5.1.3"
-    util "^0.12.3"
-    webpack "^5.66.0"
-    webpack-dev-server "^4.7.3"
-    webpack-node-externals "^3.0.0"
-    yaml "^1.10.0"
-    yml-loader "^2.1.0"
-    yn "^4.0.0"
-    zod "^3.11.6"
-
-"@backstage/core-app-api@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.npmjs.org/@backstage/core-app-api/-/core-app-api-0.5.4.tgz#9ee39828fdcba64a4eea20e9fe3da58c56c053d5"
-  integrity sha512-qH9XQpY8M3yMKUvu+pcAxOUwrazGaA3L1bbzRzCALjmjmve37k9AY3Wd89toGAzqOqwn6OhBfUg+y3kqj44fOw==
-  dependencies:
-    "@backstage/config" "^0.1.15"
-    "@backstage/core-plugin-api" "^0.7.0"
-    "@backstage/types" "^0.1.3"
-    "@backstage/version-bridge" "^0.1.2"
-    "@types/prop-types" "^15.7.3"
-    prop-types "^15.7.2"
-    react-router-dom "6.0.0-beta.0"
-    react-use "^17.2.4"
-    zen-observable "^0.8.15"
-    zod "^3.11.6"
-
-"@backstage/core-components@^0.8.0", "@backstage/core-components@^0.8.10", "@backstage/core-components@^0.8.9":
+"@backstage/core-components@^0.8.0", "@backstage/core-components@^0.8.9":
   version "0.8.10"
   resolved "https://registry.npmjs.org/@backstage/core-components/-/core-components-0.8.10.tgz#6f79c46cdf507fc3a0d764848a4a8aa73af7ce93"
   integrity sha512-gGyCPPSdgvzYHWMKlxe/H4yFmEYDQuAtaoT7Y/3+pilcJSIQi9d3oV104BDLC94bdkyOWDsA1tT+PGZtd0p/8g==
@@ -1629,36 +1519,6 @@
     react-router "6.0.0-beta.0"
     react-use "^17.2.4"
     yaml "^1.10.0"
-    zen-observable "^0.8.15"
-
-"@backstage/search-common@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@backstage/search-common/-/search-common-0.2.4.tgz#2fc8a13bebad14a8aad0594988e6f566bc30ec15"
-  integrity sha512-1h9lelwN5XRqvxAsm3QLCt3ONrSRLgQyoh2cssQ1bbUr9zR+pveeeCZ824jRfMVHF0xIJZ2YJGTtaZ9vF+77fQ==
-  dependencies:
-    "@backstage/plugin-permission-common" "^0.5.1"
-    "@backstage/types" "^0.1.3"
-
-"@backstage/test-utils@^0.2.6":
-  version "0.2.6"
-  resolved "https://registry.npmjs.org/@backstage/test-utils/-/test-utils-0.2.6.tgz#d271268196c1ec8804cdea240763032cdb36987d"
-  integrity sha512-vkWBWQxuFDEIrGVSXVdJzxYyGi7m+AVehbECeLFz7XIwPq4fkhOrGDCw1Ovkmp9IFLTysQBe2p0fI0Az7Xu38w==
-  dependencies:
-    "@backstage/config" "^0.1.15"
-    "@backstage/core-app-api" "^0.5.4"
-    "@backstage/core-plugin-api" "^0.7.0"
-    "@backstage/plugin-permission-common" "^0.5.1"
-    "@backstage/plugin-permission-react" "^0.3.2"
-    "@backstage/theme" "^0.2.15"
-    "@backstage/types" "^0.1.3"
-    "@material-ui/core" "^4.12.2"
-    "@material-ui/icons" "^4.11.2"
-    "@testing-library/jest-dom" "^5.10.1"
-    "@testing-library/react" "^11.2.5"
-    "@testing-library/user-event" "^13.1.8"
-    cross-fetch "^3.1.5"
-    react-router "6.0.0-beta.0"
-    react-router-dom "6.0.0-beta.0"
     zen-observable "^0.8.15"
 
 "@bcoe/v8-coverage@^0.2.3":
@@ -2811,8 +2671,7 @@
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-"@hot-loader/react-dom-v17@npm:@hot-loader/react-dom@^17.0.2", "@hot-loader/react-dom@^17.0.2":
-  name "@hot-loader/react-dom-v17"
+"@hot-loader/react-dom-v17@npm:@hot-loader/react-dom@^17.0.2":
   version "17.0.2"
   resolved "https://registry.npmjs.org/@hot-loader/react-dom/-/react-dom-17.0.2.tgz#0b24e484093e8f97eb5c72bebdda44fc20bc8400"
   integrity sha512-G2RZrFhsQClS+bdDh/Ojpk3SgocLPUGnvnJDTQYnmKSSwXtU+Yh+8QMs+Ia3zaAvBiOSpIIDSUxuN69cvKqrWg==
@@ -18080,13 +17939,6 @@ minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.4:
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
   dependencies:
     brace-expansion "^1.1.7"
-
-minimatch@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/minimatch/-/minimatch-5.0.0.tgz#281d8402aaaeed18a9e8406ad99c46a19206c6ef"
-  integrity sha512-EU+GCVjXD00yOUf1TwAHVP7v3fBD3A8RkkPYsWWKGWesxM/572sL53wJQnHxquHlRhYUV36wHkqrN8cdikKc2g==
-  dependencies:
-    brace-expansion "^2.0.1"
 
 minimatch@5.0.1, minimatch@^5.0.0:
   version "5.0.1"
