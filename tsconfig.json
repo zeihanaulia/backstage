@@ -10,8 +10,8 @@
     "outDir": "dist-types",
     "rootDir": ".",
     "paths": {
-      "@backstage/*/alpha": ["./node_modules/@backstage/*"],
-      "@backstage/*/beta": ["./node_modules/@backstage/*"]
+      "@backstage/plugin-*/alpha": ["./plugins/*"],
+      "@backstage/plugin-*/beta": ["./plugins/*"]
     },
     "useUnknownInCatchVariables": false
   }
