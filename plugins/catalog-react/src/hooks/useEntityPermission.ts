@@ -15,7 +15,7 @@
  */
 
 import { stringifyEntityRef } from '@backstage/catalog-model';
-import { CatalogEntityPermission } from '@backstage/plugin-catalog-common';
+import { CatalogEntityPermission } from '@backstage/plugin-catalog-common/alpha';
 import { usePermission } from '@backstage/plugin-permission-react';
 import { useEntity } from './useEntity';
 

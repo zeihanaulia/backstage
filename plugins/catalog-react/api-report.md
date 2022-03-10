@@ -8,7 +8,7 @@
 import { ApiRef } from '@backstage/core-plugin-api';
 import { CATALOG_FILTER_EXISTS } from '@backstage/catalog-client';
 import { CatalogApi } from '@backstage/catalog-client';
-import { CatalogEntityPermission } from '@backstage/plugin-catalog-common';
+import { CatalogEntityPermission } from '@backstage/plugin-catalog-common/alpha';
 import { ComponentEntity } from '@backstage/catalog-model';
 import { ComponentProps } from 'react';
 import { CompoundEntityRef } from '@backstage/catalog-model';
