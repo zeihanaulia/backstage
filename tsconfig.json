@@ -9,6 +9,10 @@
   "compilerOptions": {
     "outDir": "dist-types",
     "rootDir": ".",
+    "paths": {
+      "@backstage/*/alpha": ["./node_modules/@backstage/*"],
+      "@backstage/*/beta": ["./node_modules/@backstage/*"]
+    },
     "useUnknownInCatchVariables": false
   }
 }
