@@ -58,3 +58,15 @@ spec:
     email: guest@example.com
     picture: https://avatars.dicebear.com/api/avataaars/guest@example.com.svg?background=%23fff
   memberOf: [team-a]
+  mberOf: [team-a]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: zeihan.aulia
+spec:
+  profile:
+    displayName: Zeihan Aulia
+    email: zeihanaulia@gmail.com
+    picture: https://avatars.dicebear.com/api/avataaars/zeihanaulia@gmail.com.svg?background=%23fff
+  memberOf: [team-a]
