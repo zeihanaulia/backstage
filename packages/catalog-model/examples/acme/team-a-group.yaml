@@ -26,10 +26,10 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: janelle.dawe
+  name: lingga
 spec:
   profile:
-    displayName: Janelle Dawe
+    displayName: Lingga
     email: janelle-dawe@example.com
     picture: https://avatars.dicebear.com/api/avataaars/janelle-dawe@example.com.svg?background=%23fff
   memberOf: [team-a]
