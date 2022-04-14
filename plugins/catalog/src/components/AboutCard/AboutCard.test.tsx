@@ -298,7 +298,7 @@ describe('<AboutCard />', () => {
       'component:default/software',
     );
 
-    userEvent.click(getByTitle('Schedule entity refresh'));
+    await userEvent.click(getByTitle('Schedule entity refresh'));
 
     expect(catalogApi.refreshEntity).toHaveBeenCalledWith(
       'component:default/software',
@@ -448,7 +448,7 @@ describe('<AboutCard />', () => {
     expect(getByText('View TechDocs').closest('a')).not.toHaveAttribute('href');
   });
 
-  it('renders disbaled techdocs link when route is not bound', async () => {
+  it('renders disabled techdocs link when route is not bound', async () => {
     const entity = {
       apiVersion: 'v1',
       kind: 'Component',

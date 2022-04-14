@@ -37,11 +37,17 @@ class GithubResponseError extends CustomErrorBase {}
 /** @public */
 export interface OctokitWithPullRequestPluginClient {
   createPullRequest(options: createPullRequest.Options): Promise<{
-    data: { html_url: string };
+    data: {
+      html_url: string;
+      number: number;
+    };
   } | null>;
 }
 
-/** @public */
+/**
+ * The options passed to the client factory function.
+ * @public
+ */
 export type CreateGithubPullRequestClientFactoryInput = {
   integrations: ScmIntegrationRegistry;
   githubCredentialsProvider?: GithubCredentialsProvider;
@@ -74,10 +80,22 @@ export const defaultClientFactory = async ({
   return new OctokitPR(octokitOptions);
 };
 
-/** @public */
+/**
+ * The options passed to {@link createPublishGithubPullRequestAction} method
+ * @public
+ */
 export interface CreateGithubPullRequestActionOptions {
+  /**
+   * An instance of {@link @backstage/integration#ScmIntegrationRegistry} that will be used in the action.
+   */
   integrations: ScmIntegrationRegistry;
+  /**
+   * An instance of {@link @backstage/integration#GithubCredentialsProvider} that will be used to get credentials for the action.
+   */
   githubCredentialsProvider?: GithubCredentialsProvider;
+  /**
+   * A method to return the Octokit client with the Pull Request Plugin.
+   */
   clientFactory?: (
     input: CreateGithubPullRequestClientFactoryInput,
   ) => Promise<OctokitWithPullRequestPluginClient>;
@@ -97,6 +115,7 @@ export const createPublishGithubPullRequestAction = ({
     branchName: string;
     description: string;
     repoUrl: string;
+    draft?: boolean;
     targetPath?: string;
     sourcePath?: string;
     token?: string;
@@ -127,6 +146,11 @@ export const createPublishGithubPullRequestAction = ({
             title: 'Pull Request Description',
             description: 'The description of the pull request',
           },
+          draft: {
+            type: 'boolean',
+            title: 'Create as Draft',
+            description: 'Create a draft pull request',
+          },
           sourcePath: {
             type: 'string',
             title: 'Working Subdirectory',
@@ -154,6 +178,11 @@ export const createPublishGithubPullRequestAction = ({
             title: 'Pull Request URL',
             description: 'Link to the pull request in Github',
           },
+          pullRequestNumber: {
+            type: 'number',
+            title: 'Pull Request Number',
+            description: 'The pull request number',
+          },
         },
       },
     },
@@ -163,6 +192,7 @@ export const createPublishGithubPullRequestAction = ({
         branchName,
         title,
         description,
+        draft,
         targetPath,
         sourcePath,
         token: providedToken,
@@ -241,6 +271,7 @@ export const createPublishGithubPullRequestAction = ({
           changes,
           body: description,
           head: branchName,
+          draft,
         });
 
         if (!response) {
@@ -248,6 +279,7 @@ export const createPublishGithubPullRequestAction = ({
         }
 
         ctx.output('remoteUrl', response.data.html_url);
+        ctx.output('pullRequestNumber', response.data.number);
       } catch (e) {
         throw new GithubResponseError('Pull request creation failed', e);
       }

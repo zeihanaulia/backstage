@@ -22,9 +22,12 @@ import {
   IdentityApi,
 } from '@backstage/core-plugin-api';
 import { NotFoundError, ResponseError } from '@backstage/errors';
+import {
+  TechDocsEntityMetadata,
+  TechDocsMetadata,
+} from '@backstage/plugin-techdocs-react';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { SyncResult, TechDocsApi, TechDocsStorageApi } from './api';
-import { TechDocsEntityMetadata, TechDocsMetadata } from './types';
 
 /**
  * API to talk to `techdocs-backend`.
@@ -47,10 +50,7 @@ export class TechDocsClient implements TechDocsApi {
   }
 
   async getApiOrigin(): Promise<string> {
-    return (
-      this.configApi.getOptionalString('techdocs.requestUrl') ??
-      (await this.discoveryApi.getBaseUrl('techdocs'))
-    );
+    return await this.discoveryApi.getBaseUrl('techdocs');
   }
 
   /**
@@ -126,10 +126,7 @@ export class TechDocsStorageClient implements TechDocsStorageApi {
   }
 
   async getApiOrigin(): Promise<string> {
-    return (
-      this.configApi.getOptionalString('techdocs.requestUrl') ??
-      (await this.discoveryApi.getBaseUrl('techdocs'))
-    );
+    return await this.discoveryApi.getBaseUrl('techdocs');
   }
 
   async getStorageUrl(): Promise<string> {

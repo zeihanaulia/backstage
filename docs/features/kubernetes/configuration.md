@@ -57,6 +57,10 @@ This is an array used to determine where to retrieve cluster configuration from.
 
 Valid cluster locator methods are:
 
+- [`config`](#config)
+- [`gke`](#gke)
+- [custom `KubernetesClustersSupplier`](#custom-kubernetesclusterssupplier)
+
 #### `config`
 
 This cluster locator method will read cluster information from your app-config
@@ -255,11 +259,17 @@ CPU/Memory for pods returned by the API server. Defaults to `false`.
 
 ##### `exposeDashboard`
 
-This determines wether the `dashboardApp` and `dashboardParameters` should be
+This determines whether the `dashboardApp` and `dashboardParameters` should be
 automatically configured in order to expose the GKE dashboard from the
 Kubernetes plugin.
 
 Defaults to `false`.
+
+#### Custom `KubernetesClustersSupplier`
+
+If the configuration-based cluster locators do not work for your use-case,
+it is also possible to implement a
+[custom `KubernetesClustersSupplier`](installation.md#custom-cluster-discovery).
 
 ### `customResources` (optional)
 
@@ -343,6 +353,16 @@ following annotation should be added to the entity's `catalog-info.yaml`:
 ```yaml
 annotations:
   'backstage.io/kubernetes-id': dice-roller
+```
+
+#### Adding the namespace annotation
+
+Entities can have the `backstage.io/kubernetes-namespace` annotation, this will cause the entity's Kubernetes resources
+to by looked up via that namespace.
+
+```yaml
+annotations:
+  'backstage.io/kubernetes-namespace': dice-space
 ```
 
 #### Labeling Kubernetes components

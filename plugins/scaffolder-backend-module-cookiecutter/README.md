@@ -8,9 +8,9 @@ You need to configure the action in your backend:
 
 ## From your Backstage root directory
 
-```
-cd packages/backend
-yarn add @backstage/plugin-scaffolder-backend-module-cookiecutter
+```bash
+# From your Backstage root directory
+yarn add --cwd packages/backend @backstage/plugin-scaffolder-backend-module-cookiecutter
 ```
 
 Configure the action:
@@ -22,7 +22,7 @@ Configure the action:
 const actions = [
   createFetchCookiecutterAction({
     integrations,
-    reader,
+    reader: env.reader,
     containerRunner,
   }),
   ...createBuiltInActions({
@@ -32,12 +32,12 @@ const actions = [
 
 return await createRouter({
   containerRunner,
-  logger,
-  config,
-  database,
   catalogClient,
-  reader,
   actions,
+  logger: env.logger,
+  config: env.config,
+  database: env.database,
+  reader: env.reader,
 });
 ```
 

@@ -70,10 +70,10 @@ export interface Config {
     /** Database connection configuration, select base database type using the `client` field */
     database: {
       /** Default database client to use */
-      client: 'sqlite3' | 'pg';
+      client: 'better-sqlite3' | 'sqlite3' | 'pg';
       /**
        * Base database connection string or Knex object
-       * @secret
+       * @visibility secret
        */
       connection: string | object;
       /** Database name prefix override */
@@ -106,10 +106,10 @@ export interface Config {
       plugin?: {
         [pluginId: string]: {
           /** Database client override */
-          client?: 'sqlite3' | 'pg';
+          client?: 'better-sqlite3' | 'sqlite3' | 'pg';
           /**
            * Database connection string or Knex object override
-           * @secret
+           * @visibility secret
            */
           connection?: string | object;
           /**
@@ -138,7 +138,7 @@ export interface Config {
           store: 'redis';
           /**
            * A redis connection string in the form `redis://user:pass@host:port`.
-           * @secret
+           * @visibility secret
            */
           connection: string;
         }
@@ -146,7 +146,7 @@ export interface Config {
           store: 'memcache';
           /**
            * A memcache connection string in the form `user:pass@host:port`.
-           * @secret
+           * @visibility secret
            */
           connection: string;
         };

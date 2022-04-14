@@ -56,6 +56,7 @@ describe('readMicrosoftGraphConfig', () => {
           userExpand: 'manager',
           userFilter: 'accountEnabled eq true',
           groupExpand: 'member',
+          groupSelect: ['id', 'displayName', 'description'],
           groupFilter: 'securityEnabled eq false',
         },
       ],
@@ -71,6 +72,7 @@ describe('readMicrosoftGraphConfig', () => {
         userExpand: 'manager',
         userFilter: 'accountEnabled eq true',
         groupExpand: 'member',
+        groupSelect: ['id', 'displayName', 'description'],
         groupFilter: 'securityEnabled eq false',
       },
     ];
@@ -88,6 +90,23 @@ describe('readMicrosoftGraphConfig', () => {
           authority: 'https://login.example.com/',
           userFilter: 'accountEnabled eq true',
           userGroupMemberFilter: 'any',
+        },
+      ],
+    };
+    expect(() => readMicrosoftGraphConfig(new ConfigReader(config))).toThrow();
+  });
+
+  it('should fail if both userFilter and userGroupMemberSearch are set', () => {
+    const config = {
+      providers: [
+        {
+          target: 'target',
+          tenantId: 'tenantId',
+          clientId: 'clientId',
+          clientSecret: 'clientSecret',
+          authority: 'https://login.example.com/',
+          userFilter: 'accountEnabled eq true',
+          userGroupMemberSearch: 'any',
         },
       ],
     };

@@ -17,7 +17,6 @@
 import { PluginDatabaseManager, UrlReader } from '@backstage/backend-common';
 import {
   DefaultNamespaceEntityPolicy,
-  Entity,
   EntityPolicies,
   EntityPolicy,
   FieldFormatEntityPolicy,
@@ -32,7 +31,6 @@ import { ScmIntegrations } from '@backstage/integration';
 import { createHash } from 'crypto';
 import { Router } from 'express';
 import lodash, { keyBy } from 'lodash';
-import { EntitiesCatalog, EntitiesSearchFilter } from '../catalog';
 
 import {
   CatalogProcessor,
@@ -68,7 +66,6 @@ import { DefaultCatalogProcessingOrchestrator } from '../processing/DefaultCatal
 import { Stitcher } from '../stitching/Stitcher';
 import {
   createRandomProcessingInterval,
-  RefreshIntervalFunction,
   ProcessingIntervalFunction,
 } from '../processing/refresh';
 import { createRouter } from './createRouter';
@@ -77,12 +74,17 @@ import { AuthorizedRefreshService } from './AuthorizedRefreshService';
 import { DefaultCatalogRulesEnforcer } from '../ingestion/CatalogRules';
 import { Config } from '@backstage/config';
 import { Logger } from 'winston';
-import { LocationService } from './types';
 import { connectEntityProviders } from '../processing/connectEntityProviders';
-import { permissionRules as catalogPermissionRules } from '../permissions/rules';
-import { PermissionAuthorizer } from '@backstage/plugin-permission-common';
 import {
-  PermissionRule,
+  CatalogPermissionRule,
+  permissionRules as catalogPermissionRules,
+} from '../permissions/rules';
+import {
+  PermissionAuthorizer,
+  PermissionEvaluator,
+  toPermissionEvaluator,
+} from '@backstage/plugin-permission-common';
+import {
   createConditionTransformer,
   createPermissionIntegrationRouter,
 } from '@backstage/plugin-permission-node';
@@ -97,7 +99,7 @@ export type CatalogEnvironment = {
   database: PluginDatabaseManager;
   config: Config;
   reader: UrlReader;
-  permissions: PermissionAuthorizer;
+  permissions: PermissionEvaluator | PermissionAuthorizer;
 };
 
 /**
@@ -137,11 +139,7 @@ export class CatalogBuilder {
       maxSeconds: 150,
     });
   private locationAnalyzer: LocationAnalyzer | undefined = undefined;
-  private permissionRules: PermissionRule<
-    Entity,
-    EntitiesSearchFilter,
-    unknown[]
-  >[];
+  private permissionRules: CatalogPermissionRule[];
 
   /**
    * Creates a catalog builder.
@@ -180,25 +178,6 @@ export class CatalogBuilder {
   }
 
   /**
-   * Refresh interval determines how often entities should be refreshed.
-   * Seconds provided will be multiplied by 1.5
-   * The default refresh duration is 100-150 seconds.
-   * setting this too low will potentially deplete request quotas to upstream services.
-   *
-   * @deprecated use {@link CatalogBuilder#setProcessingIntervalSeconds} instead
-   */
-  setRefreshIntervalSeconds(seconds: number): CatalogBuilder {
-    this.env.logger.warn(
-      '[DEPRECATION] - CatalogBuilder.setRefreshIntervalSeconds is deprecated. Use CatalogBuilder.setProcessingIntervalSeconds instead.',
-    );
-    this.processingInterval = createRandomProcessingInterval({
-      minSeconds: seconds,
-      maxSeconds: seconds * 1.5,
-    });
-    return this;
-  }
-
-  /**
    * Processing interval determines how often entities should be processed.
    * Seconds provided will be multiplied by 1.5
    * The default processing interval is 100-150 seconds.
@@ -209,20 +188,6 @@ export class CatalogBuilder {
       minSeconds: seconds,
       maxSeconds: seconds * 1.5,
     });
-    return this;
-  }
-
-  /**
-   * Overwrites the default refresh interval function used to spread
-   * entity updates in the catalog.
-   *
-   * @deprecated use {@link CatalogBuilder#setProcessingInterval} instead
-   */
-  setRefreshInterval(refreshInterval: RefreshIntervalFunction): CatalogBuilder {
-    this.env.logger.warn(
-      '[DEPRECATION] - CatalogBuilder.setRefreshInterval is deprecated. Use CatalogBuilder.setProcessingInterval instead.',
-    );
-    this.processingInterval = refreshInterval;
     return this;
   }
 
@@ -374,14 +339,9 @@ export class CatalogBuilder {
    * {@link @backstage/plugin-permission-node#PermissionRule}.
    *
    * @param permissionRules - Additional permission rules
+   * @alpha
    */
-  addPermissionRules(
-    ...permissionRules: PermissionRule<
-      Entity,
-      EntitiesSearchFilter,
-      unknown[]
-    >[]
-  ) {
+  addPermissionRules(...permissionRules: CatalogPermissionRule[]) {
     this.permissionRules.push(...permissionRules);
   }
 
@@ -389,10 +349,7 @@ export class CatalogBuilder {
    * Wires up and returns all of the component parts of the catalog
    */
   async build(): Promise<{
-    entitiesCatalog: EntitiesCatalog;
-    locationAnalyzer: LocationAnalyzer;
     processingEngine: CatalogProcessingEngine;
-    locationService: LocationService;
     router: Router;
   }> {
     const { config, database, logger, permissions } = this.env;
@@ -423,9 +380,20 @@ export class CatalogBuilder {
       policy,
     });
     const unauthorizedEntitiesCatalog = new DefaultEntitiesCatalog(dbClient);
+
+    let permissionEvaluator: PermissionEvaluator;
+    if ('query' in permissions) {
+      permissionEvaluator = permissions as PermissionEvaluator;
+    } else {
+      logger.warn(
+        'PermissionAuthorizer is deprecated. Please use an instance of PermissionEvaluator instead of PermissionAuthorizer in PluginEnvironment#permissions',
+      );
+      permissionEvaluator = toPermissionEvaluator(permissions);
+    }
+
     const entitiesCatalog = new AuthorizedEntitiesCatalog(
       unauthorizedEntitiesCatalog,
-      permissions,
+      permissionEvaluator,
       createConditionTransformer(this.permissionRules),
     );
     const permissionIntegrationRouter = createPermissionIntegrationRouter({
@@ -475,16 +443,17 @@ export class CatalogBuilder {
       this.locationAnalyzer ?? new RepoLocationAnalyzer(logger, integrations);
     const locationService = new AuthorizedLocationService(
       new DefaultLocationService(locationStore, orchestrator),
-      permissions,
+      permissionEvaluator,
     );
     const refreshService = new AuthorizedRefreshService(
       new DefaultRefreshService({ database: processingDatabase }),
-      permissions,
+      permissionEvaluator,
     );
     const router = await createRouter({
       entitiesCatalog,
       locationAnalyzer,
       locationService,
+      orchestrator,
       refreshService,
       logger,
       config,
@@ -494,10 +463,7 @@ export class CatalogBuilder {
     await connectEntityProviders(processingDatabase, entityProviders);
 
     return {
-      entitiesCatalog,
-      locationAnalyzer,
       processingEngine,
-      locationService,
       router,
     };
   }

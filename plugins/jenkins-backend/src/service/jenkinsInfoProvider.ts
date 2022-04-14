@@ -32,6 +32,8 @@ export interface JenkinsInfoProvider {
      * A specific job to get. This is only passed in when we know about a job name we are interested in.
      */
     jobFullName?: string;
+
+    backstageToken?: string;
   }): Promise<JenkinsInfo>;
 }
 
@@ -97,7 +99,7 @@ export class JenkinsConfig {
     const unnamedAllPresent = baseUrl && username && apiKey;
     if (!(unnamedAllPresent || unnamedNonePresent)) {
       throw new Error(
-        `Found partial default jenkins config. All (or none) of  baseUrl, username ans apiKey must be provided.`,
+        `Found partial default jenkins config. All (or none) of baseUrl, username and apiKey must be provided.`,
       );
     }
 
@@ -184,9 +186,12 @@ export class DefaultJenkinsInfoProvider implements JenkinsInfoProvider {
   async getInstance(opt: {
     entityRef: CompoundEntityRef;
     jobFullName?: string;
+    backstageToken?: string;
   }): Promise<JenkinsInfo> {
     // load entity
-    const entity = await this.catalog.getEntityByRef(opt.entityRef);
+    const entity = await this.catalog.getEntityByRef(opt.entityRef, {
+      token: opt.backstageToken,
+    });
     if (!entity) {
       throw new Error(
         `Couldn't find entity with name: ${stringifyEntityRef(opt.entityRef)}`,

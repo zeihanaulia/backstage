@@ -175,9 +175,6 @@ export type EntityMeta = JsonObject & {
   links?: EntityLink[];
 };
 
-// @public @deprecated
-export type EntityName = CompoundEntityRef;
-
 // @public
 export const EntityPolicies: {
   allOf(policies: EntityPolicy[]): EntityPolicy;
@@ -225,9 +222,6 @@ export class FieldFormatEntityPolicy implements EntityPolicy {
 
 // @public
 export function getCompoundEntityRef(entity: Entity): CompoundEntityRef;
-
-// @public @deprecated
-export const getEntityName: typeof getCompoundEntityRef;
 
 // @public
 export function getEntitySourceLocation(entity: Entity): {
@@ -453,7 +447,7 @@ interface UserEntityV1alpha1 extends Entity {
       email?: string;
       picture?: string;
     };
-    memberOf: string[];
+    memberOf?: string[];
   };
 }
 export { UserEntityV1alpha1 as UserEntity };

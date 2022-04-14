@@ -16,13 +16,13 @@ catalog.
 
 You will have to add the processors in the catalog initialization code of your
 backend. They are not installed by default, therefore you have to add a
-dependency to `@backstage/plugin-catalog-backend-module-github` to your backend
-package.
+dependency on `@backstage/plugin-catalog-backend-module-github` to your backend
+package, plus `@backstage/integration` for the basic credentials management:
 
 ```bash
 # From your Backstage root directory
-cd packages/backend
-yarn add @backstage/plugin-catalog-backend-module-github
+yarn add --cwd packages/backend @backstage/integration
+yarn add --cwd packages/backend @backstage/plugin-catalog-backend-module-github
 ```
 
 And then add the processors to your catalog builder:
@@ -42,16 +42,16 @@ And then add the processors to your catalog builder:
    env: PluginEnvironment,
  ): Promise<Router> {
    const builder = await CatalogBuilder.create(env);
-+  const integrations = ScmIntegrations.fromConfig(config);
++  const integrations = ScmIntegrations.fromConfig(env.config);
 +  const githubCredentialsProvider =
 +    DefaultGithubCredentialsProvider.fromIntegrations(integrations);
 +  builder.addProcessor(
-+    GithubDiscoveryProcessor.fromConfig(config, {
-+      logger,
++    GithubDiscoveryProcessor.fromConfig(env.config, {
++      logger: env.logger,
 +      githubCredentialsProvider,
 +    }),
-+    GithubOrgReaderProcessor.fromConfig(config, {
-+      logger,
++    GithubOrgReaderProcessor.fromConfig(env.config, {
++      logger: env.logger,
 +      githubCredentialsProvider,
 +    }),
 +  );
@@ -109,7 +109,7 @@ the catalog in your `packages/backend/src/plugins/catalog.ts` file:
 const builder = await CatalogBuilder.create(env);
 
 // For example, to refresh every 5 minutes (300 seconds).
-builder.setRefreshIntervalSeconds(300);
+builder.setProcessingIntervalSeconds(300);
 ```
 
 Alternatively, or additionally, you can configure [github-apps] authentication

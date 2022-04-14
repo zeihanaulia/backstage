@@ -15,6 +15,7 @@
  */
 
 import {
+  Entity,
   RELATION_API_CONSUMED_BY,
   RELATION_API_PROVIDED_BY,
   RELATION_CONSUMES_API,
@@ -108,8 +109,27 @@ import { EntityTodoContent } from '@backstage/plugin-todo';
 import { Button, Grid } from '@material-ui/core';
 import BadgeIcon from '@material-ui/icons/CallToAction';
 
-import { EntityGithubInsightsContent } from '@roadiehq/backstage-plugin-github-insights';
-import { EntityGithubPullRequestsContent } from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityGithubInsightsContent,
+  EntityGithubInsightsLanguagesCard,
+  EntityGithubInsightsReadmeCard,
+  EntityGithubInsightsReleasesCard,
+  isGithubInsightsAvailable,
+} from '@roadiehq/backstage-plugin-github-insights';
+import {
+  EntityGithubPullRequestsContent,
+  EntityGithubPullRequestsOverviewCard,
+  isGithubPullRequestsAvailable,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityTravisCIContent,
+  EntityTravisCIOverviewCard,
+  isTravisciAvailable,
+} from '@roadiehq/backstage-plugin-travis-ci';
+import {
+  EntityBuildkiteContent,
+  isBuildkiteAvailable,
+} from '@roadiehq/backstage-plugin-buildkite';
 import {
   isNewRelicDashboardAvailable,
   EntityNewRelicDashboardContent,
@@ -160,12 +180,20 @@ export const cicdContent = (
       <EntityJenkinsContent />
     </EntitySwitch.Case>
 
+    <EntitySwitch.Case if={isBuildkiteAvailable}>
+      <EntityBuildkiteContent />
+    </EntitySwitch.Case>
+
     <EntitySwitch.Case if={isCircleCIAvailable}>
       <EntityCircleCIContent />
     </EntitySwitch.Case>
 
     <EntitySwitch.Case if={isCloudbuildAvailable}>
       <EntityCloudbuildContent />
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isTravisciAvailable}>
+      <EntityTravisCIContent />
     </EntitySwitch.Case>
 
     <EntitySwitch.Case if={isGoCdAvailable}>
@@ -204,6 +232,12 @@ const cicdCard = (
     <EntitySwitch.Case if={isJenkinsAvailable}>
       <Grid item sm={6}>
         <EntityLatestJenkinsRunCard branch="master" variant="gridItem" />
+      </Grid>
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isTravisciAvailable as (e: Entity) => boolean}>
+      <Grid item sm={6}>
+        <EntityTravisCIOverviewCard />
       </Grid>
     </EntitySwitch.Case>
 
@@ -293,9 +327,29 @@ const overviewContent = (
     {cicdCard}
 
     <EntitySwitch>
+      <EntitySwitch.Case if={isGithubInsightsAvailable}>
+        <Grid item md={6}>
+          <EntityGithubInsightsLanguagesCard />
+          <EntityGithubInsightsReleasesCard />
+        </Grid>
+        <Grid item md={6}>
+          <EntityGithubInsightsReadmeCard maxHeight={350} />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
       <EntitySwitch.Case if={isLighthouseAvailable}>
         <Grid item sm={4}>
           <EntityLastLighthouseAuditCard variant="gridItem" />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+        <Grid item sm={4}>
+          <EntityGithubPullRequestsOverviewCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

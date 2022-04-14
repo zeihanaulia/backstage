@@ -65,10 +65,9 @@ to install and configure the client.
 Stop Backstage, and go to the root directory of your freshly installed Backstage
 App. Use the following commands to start the PostgreSQL client installation:
 
-```shell
+```bash
 # From your Backstage root directory
-cd packages/backend
-yarn add pg
+yarn add --cwd packages/backend pg
 ```
 
 Use your favorite editor to open `app-config.yaml` and add your PostgreSQL
@@ -78,7 +77,7 @@ from the previous steps.
 ```diff
 backend:
   database:
--    client: sqlite3
+-    client: better-sqlite3
 -    connection: ':memory:'
 +    # config options: https://node-postgres.com/api/client
 +    client: pg
@@ -218,7 +217,7 @@ for 7 days, it's a lucky number.
   <img src='../assets/getting-started/gh-pat.png' alt='Screenshot of the GitHub Personal Access Token creation page' />
 </p>
 
-Set the scope to your likings. For this tutorial, selecting "repo" should be
+Set the scope to your likings. For this tutorial, selecting "repo" and "workflow" is required as the scaffolding job in this guide configures a GitHub actions workflow for the newly created project.
 enough.
 
 In the `app-config.yaml`, search for `integrations:` and add your token, like we
@@ -276,7 +275,7 @@ otherwise something went terribly wrong.
 
 - Go to `create` and choose to create a website with the `React SSR Template`
 - Type in a name, let's use `tutorial`
-- Select the group `group-a` which will own this new website, and go to the next
+- Select the group `team-a` which will own this new website, and go to the next
   step
 
 <p align='center'>

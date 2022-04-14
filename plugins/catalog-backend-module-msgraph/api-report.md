@@ -14,6 +14,7 @@ import { Logger } from 'winston';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import * as msal from '@azure/msal-node';
 import { Response as Response_2 } from 'node-fetch';
+import { TaskRunner } from '@backstage/backend-tasks';
 import { UserEntity } from '@backstage/catalog-model';
 
 // @public
@@ -70,7 +71,10 @@ export class MicrosoftGraphClient {
     groupId: string,
     maxSize: number,
   ): Promise<string | undefined>;
-  getGroups(query?: ODataQuery): AsyncIterable<MicrosoftGraph.Group>;
+  getGroups(
+    query?: ODataQuery,
+    queryMode?: 'basic' | 'advanced',
+  ): AsyncIterable<MicrosoftGraph.Group>;
   getOrganization(tenantId: string): Promise<MicrosoftGraph.Organization>;
   // (undocumented)
   getUserPhoto(userId: string, sizeId?: string): Promise<string | undefined>;
@@ -82,13 +86,20 @@ export class MicrosoftGraphClient {
     userId: string,
     query?: ODataQuery,
   ): Promise<MicrosoftGraph.User>;
-  getUsers(query?: ODataQuery): AsyncIterable<MicrosoftGraph.User>;
+  getUsers(
+    query?: ODataQuery,
+    queryMode?: 'basic' | 'advanced',
+  ): AsyncIterable<MicrosoftGraph.User>;
   requestApi(
     path: string,
     query?: ODataQuery,
     headers?: Record<string, string>,
   ): Promise<Response_2>;
-  requestCollection<T>(path: string, query?: ODataQuery): AsyncIterable<T>;
+  requestCollection<T>(
+    path: string,
+    query?: ODataQuery,
+    queryMode?: 'basic' | 'advanced',
+  ): AsyncIterable<T>;
   requestRaw(
     url: string,
     headers?: Record<string, string>,
@@ -109,19 +120,23 @@ export class MicrosoftGraphOrgEntityProvider implements EntityProvider {
   connect(connection: EntityProviderConnection): Promise<void>;
   // (undocumented)
   static fromConfig(
-    config: Config,
-    options: {
-      id: string;
-      target: string;
-      logger: Logger;
-      userTransformer?: UserTransformer;
-      groupTransformer?: GroupTransformer;
-      organizationTransformer?: OrganizationTransformer;
-    },
+    configRoot: Config,
+    options: MicrosoftGraphOrgEntityProviderOptions,
   ): MicrosoftGraphOrgEntityProvider;
   // (undocumented)
   getProviderName(): string;
-  read(): Promise<void>;
+  read(options?: { logger?: Logger }): Promise<void>;
+}
+
+// @public
+export interface MicrosoftGraphOrgEntityProviderOptions {
+  groupTransformer?: GroupTransformer;
+  id: string;
+  logger: Logger;
+  organizationTransformer?: OrganizationTransformer;
+  schedule: 'manual' | TaskRunner;
+  target: string;
+  userTransformer?: UserTransformer;
 }
 
 // @public
@@ -167,6 +182,8 @@ export type MicrosoftGraphProviderConfig = {
   groupExpand?: string;
   groupFilter?: string;
   groupSearch?: string;
+  groupSelect?: string[];
+  queryMode?: 'basic' | 'advanced';
 };
 
 // @public
@@ -178,6 +195,7 @@ export type ODataQuery = {
   filter?: string;
   expand?: string;
   select?: string[];
+  count?: boolean;
 };
 
 // @public
@@ -202,6 +220,8 @@ export function readMicrosoftGraphOrg(
     groupExpand?: string;
     groupSearch?: string;
     groupFilter?: string;
+    groupSelect?: string[];
+    queryMode?: 'basic' | 'advanced';
     userTransformer?: UserTransformer;
     groupTransformer?: GroupTransformer;
     organizationTransformer?: OrganizationTransformer;

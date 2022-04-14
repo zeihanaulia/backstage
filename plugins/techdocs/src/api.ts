@@ -15,7 +15,10 @@
  */
 
 import { CompoundEntityRef } from '@backstage/catalog-model';
-import { TechDocsEntityMetadata, TechDocsMetadata } from './types';
+import {
+  TechDocsEntityMetadata,
+  TechDocsMetadata,
+} from '@backstage/plugin-techdocs-react';
 import { createApiRef } from '@backstage/core-plugin-api';
 
 /**
@@ -31,6 +34,7 @@ export const techdocsStorageApiRef = createApiRef<TechDocsStorageApi>({
  * Utility API reference for the {@link TechDocsApi}.
  *
  * @public
+ * @deprecated Import from `@backstage/plugin-techdocs-react` instead
  */
 export const techdocsApiRef = createApiRef<TechDocsApi>({
   id: 'plugin.techdocs.service',
@@ -49,9 +53,6 @@ export type SyncResult = 'cached' | 'updated';
  * @public
  */
 export interface TechDocsStorageApi {
-  /**
-   * Set to techdocs.requestUrl as the URL for techdocs-backend API.
-   */
   getApiOrigin(): Promise<string>;
   getStorageUrl(): Promise<string>;
   getBuilder(): Promise<string>;
@@ -71,11 +72,9 @@ export interface TechDocsStorageApi {
  * API to talk to techdocs-backend.
  *
  * @public
+ * @deprecated Import from `@backstage/plugin-techdocs-react` instead
  */
 export interface TechDocsApi {
-  /**
-   * Set to techdocs.requestUrl as the URL for techdocs-backend API.
-   */
   getApiOrigin(): Promise<string>;
   getTechDocsMetadata(entityId: CompoundEntityRef): Promise<TechDocsMetadata>;
   getEntityMetadata(

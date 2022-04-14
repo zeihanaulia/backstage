@@ -8,9 +8,9 @@ You need to configure the action in your backend:
 
 ## From your Backstage root directory
 
-```
-cd packages/backend
-yarn add @backstage/plugin-scaffolder-backend-module-yeoman
+```bash
+# From your Backstage root directory
+yarn add --cwd packages/backend @backstage/plugin-scaffolder-backend-module-yeoman
 ```
 
 Configure the action:
@@ -23,21 +23,21 @@ const actions = [
   createRunYeomanAction(),
   ...createBuiltInActions({
     containerRunner,
-    integrations,
-    config,
     catalogClient,
-    reader,
+    integrations,
+    config: env.config,
+    reader: env.reader,
   }),
 ];
 
 return await createRouter({
   containerRunner,
-  logger,
-  config,
-  database,
   catalogClient,
-  reader,
   actions,
+  logger: env.logger,
+  config: env.config,
+  database: env.database,
+  reader: env.reader,
 });
 ```
 

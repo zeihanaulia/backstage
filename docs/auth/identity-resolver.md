@@ -29,9 +29,9 @@ sign-in resolvers and set them for any of the Authentication providers inside
 ```ts
 import { DEFAULT_NAMESPACE, stringifyEntityRef } from '@backstage/catalog-model';
 
-export default async function createPlugin({
-  ...
-}: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   return await createRouter({
     ...
     providerFactories: {
@@ -51,11 +51,12 @@ export default async function createPlugin({
             // Let's use the username in the email ID as the user's default
             // unique identifier inside Backstage.
             const [id] = email.split('@');
-            ent.push(stringifyEntityRef({
+            const userEntityRef = stringifyEntityRef({
               kind: 'User',
               namespace: DEFAULT_NAMESPACE,
               name: id,
-            }));
+            });
+            ent.push(userEntityRef);
 
             // Let's call the internal LDAP provider to get a list of groups
             // that the user belongs to, and add those to the list as well
@@ -68,7 +69,7 @@ export default async function createPlugin({
 
             // Issue the token containing the entity claims
             const token = await ctx.tokenIssuer.issueToken({
-              claims: { sub: id, ent },
+              claims: { sub: userEntityRef, ent },
             });
             return { id, token };
           },
@@ -105,13 +106,13 @@ matching `google.com/email` annotation.
 
 It can be enabled like this
 
-```tsx
+```ts
 // File: packages/backend/src/plugins/auth.ts
 import { googleEmailSignInResolver, createGoogleProvider } from '@backstage/plugin-auth-backend';
 
-export default async function createPlugin({
-  ...
-}: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   return await createRouter({
     ...
     providerFactories: {
@@ -130,9 +131,11 @@ can do this using the `CatalogIdentityClient` provided as context to Sign-In
 resolvers:
 
 ```ts
-export default async function createPlugin({
-  ...
-}: PluginEnvironment): Promise<Router> {
+import { DEFAULT_NAMESPACE, stringifyEntityRef } from '@backstage/catalog-model';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   return await createRouter({
     ...
     providerFactories: {
@@ -140,6 +143,11 @@ export default async function createPlugin({
         signIn: {
           resolver: async ({ profile: { email } }, ctx) => {
             const [id] = email?.split('@') ?? '';
+            const userEntityRef = stringifyEntityRef({
+              kind: 'User',
+              namespace: DEFAULT_NAMESPACE,
+              name: id,
+            });
             // Fetch from an external system that returns entity claims like:
             // ['user:default/breanna.davison', ...]
             const ent = await externalSystemClient.getUsernames(email);
@@ -150,7 +158,7 @@ export default async function createPlugin({
               logger: ctx.logger,
             });
             const token = await ctx.tokenIssuer.issueToken({
-              claims: { sub: id, ent: fullEnt },
+              claims: { sub: userEntityRef, ent: fullEnt },
             });
             return { id, token };
           },
@@ -174,11 +182,11 @@ display name and profile picture.
 This is also the place where you can do authorization and validation of the user
 and throw errors if the user should not be allowed access in Backstage.
 
-```tsx
+```ts
 // File: packages/backend/src/plugins/auth.ts
-export default async function createPlugin({
-  ...
-}: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   return await createRouter({
     ...
     providerFactories: {

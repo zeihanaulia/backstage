@@ -53,7 +53,7 @@ export type MicrosoftGraphProviderConfig = {
    */
   userFilter?: string;
   /**
-   * The expand argument to apply to users.
+   * The "expand" argument to apply to users.
    *
    * E.g. "manager"
    */
@@ -88,6 +88,23 @@ export type MicrosoftGraphProviderConfig = {
    * E.g. "\"displayName:-team\"" would only match groups which contain '-team'
    */
   groupSearch?: string;
+
+  /**
+   * The fields to be fetched on query.
+   *
+   * E.g. ["id", "displayName", "description"]
+   */
+  groupSelect?: string[];
+
+  /**
+   * By default, the Microsoft Graph API only provides the basic feature set
+   * for querying. Certain features are limited to advanced query capabilities
+   * (see https://docs.microsoft.com/en-us/graph/aad-advanced-queries)
+   * and need to be enabled.
+   *
+   * Some features like `$expand` are not available for advanced queries, though.
+   */
+  queryMode?: 'basic' | 'advanced';
 };
 
 /**
@@ -136,6 +153,16 @@ export function readMicrosoftGraphConfig(
       );
     }
 
+    const groupSelect = providerConfig.getOptionalStringArray('groupSelect');
+    const queryMode = providerConfig.getOptionalString('queryMode');
+    if (
+      queryMode !== undefined &&
+      queryMode !== 'basic' &&
+      queryMode !== 'advanced'
+    ) {
+      throw new Error(`queryMode must be one of: basic, advanced`);
+    }
+
     providers.push({
       target,
       authority,
@@ -149,6 +176,8 @@ export function readMicrosoftGraphConfig(
       groupExpand,
       groupFilter,
       groupSearch,
+      groupSelect,
+      queryMode,
     });
   }
 

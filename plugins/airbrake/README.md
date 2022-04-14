@@ -8,16 +8,14 @@ The Airbrake plugin provides connectivity between Backstage and Airbrake (https:
 
    ```bash
    # From your Backstage root directory
-   cd packages/app
-   yarn add @backstage/plugin-airbrake
+   yarn add --cwd packages/app @backstage/plugin-airbrake
    ```
 
 2. Install the Backend plugin:
 
    ```bash
    # From your Backstage root directory
-   cd packages/backend
-   yarn add @backstage/plugin-airbrake-backend
+   yarn add --cwd packages/backend @backstage/plugin-airbrake-backend
    ```
 
 3. Add the `EntityAirbrakeContent` to `packages/app/src/components/catalog/EntityPage.tsx` for all the entity pages you want Airbrake to be in:
@@ -60,13 +58,12 @@ The Airbrake plugin provides connectivity between Backstage and Airbrake (https:
      extractAirbrakeConfig,
    } from '@backstage/plugin-airbrake-backend';
 
-   export default async function createPlugin({
-     logger,
-     config,
-   }: PluginEnvironment): Promise<Router> {
+   export default async function createPlugin(
+     env: PluginEnvironment,
+   ): Promise<Router> {
      return createRouter({
-       logger,
-       airbrakeConfig: extractAirbrakeConfig(config),
+       logger: env.logger,
+       airbrakeConfig: extractAirbrakeConfig(env.config),
      });
    }
    ```
